@@ -19,7 +19,7 @@
 <meta property="og:site_name" content="勋荣‘s blog">
 <meta property="og:description" content="Scala作为一门混合了函数式及面向对象思想的语言，在新手刚开始学习的时候总会碰到很多之前没有听到或不熟悉的概念，因此也就形成了我们做技术的人常说的坑，今天就来谈谈scala生态圈中的implicit conversions（即隐式转换），在后面还会陆续写implicits系列的文章，其中包括implicit parameters（隐式参数），implicit classes（隐式类）等。
 隐式转">
-<meta property="og:updated_time" content="2015-07-25T15:05:02.000Z">
+<meta property="og:updated_time" content="2015-07-25T15:08:30.000Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Scala Implicits 之 Implicit Conversions">
 <meta name="twitter:description" content="Scala作为一门混合了函数式及面向对象思想的语言，在新手刚开始学习的时候总会碰到很多之前没有听到或不熟悉的概念，因此也就形成了我们做技术的人常说的坑，今天就来谈谈scala生态圈中的implicit conversions（即隐式转换），在后面还会陆续写implicits系列的文章，其中包括implicit parameters（隐式参数），implicit classes（隐式类）等。
@@ -142,9 +142,8 @@
   <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">implicit</span> def stringToValidator(str: String) = &#123;</span><br><span class="line">   new &#123;</span><br><span class="line">     	def isEmail: Boolean = ???</span><br><span class="line">   	&#125;</span><br><span class="line"> 	&#125;</span><br><span class="line"></span><br><span class="line"> 	<span class="string">"123@gmail.com"</span>.isEmail</span><br></pre></td></tr></table></figure>
 <p>  此时<code>123@gmail.com</code>转换成的新类型为：  </p>
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object &#123;<span class="function"><span class="keyword">def</span> <span class="title">isEmail</span>:</span> Boolean&#125;</span><br></pre></td></tr></table></figure>
+<p>在Scala的2.10版本之后引入了一个新的概念叫做<strong>Implicit Classes</strong>，实际上就是匿名类转换的一个语法糖。在后面的章节会介绍。</p>
 </li>
-</ul>
-<ul>
 <li><h4 id="增强与新类型的互操作"><strong>增强与新类型的互操作</strong></h4><p>  正常情况下，数值类型是不能够和字符串进行运算的，在隐式转换后这些操作看起来是可行的：  </p>
   <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">implicit <span class="function"><span class="keyword">def</span> <span class="title">strToInt</span><span class="params">(str: String)</span>:</span> Int = Integer.parseInt(str)</span><br><span class="line"></span><br><span class="line"><span class="number">5</span> * <span class="string">"123"</span>  </span><br><span class="line"></span><br><span class="line"><span class="number">8</span> + <span class="string">"234"</span></span><br></pre></td></tr></table></figure>
 </li>
@@ -185,6 +184,19 @@
    	       
 	</article>
 	
+<nav class="article-nav clearfix">
+ 
+ <div class="prev" >
+ <a href="/2015/07/27/implicits-parameters/" title="Scala Implicits 之 Implicit Parameters">
+  <strong>上一篇：</strong><br/>
+  <span>
+  Scala Implicits 之 Implicit Parameters</span>
+</a>
+</div>
+
+
+</nav>
+
 	
 
 </div>  
@@ -209,7 +221,7 @@
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/scala/" title="scala">scala<sup>1</sup></a></li>
+				<li><a href="/tags/scala/" title="scala">scala<sup>2</sup></a></li>
 			
 		
 		</ul>

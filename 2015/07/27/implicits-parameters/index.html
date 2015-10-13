@@ -1,0 +1,497 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>Scala Implicits 之 Implicit Parameters | 勋荣‘s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Xunrong Rao">
+    
+
+    
+    <meta name="description" content="前面的章节提到过Scala中的Implicit Conversions(隐式转换)，这篇文章来讲讲Implicit Parameters(隐式参数)。个人感觉相对于隐式转换，隐式参数更加灵活，也更加难以掌握，和其它的一些特性结合起来能够达到常规特性所无法企及的功能，正因为这样所以才是Scala所必须要掌握的技能之一。
+隐式参数（Implicit Paramaters）引子顾名思义，隐式参数分为两个">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Scala Implicits 之 Implicit Parameters">
+<meta property="og:url" content="raoxunrong.github.io/2015/07/27/implicits-parameters/index.html">
+<meta property="og:site_name" content="勋荣‘s blog">
+<meta property="og:description" content="前面的章节提到过Scala中的Implicit Conversions(隐式转换)，这篇文章来讲讲Implicit Parameters(隐式参数)。个人感觉相对于隐式转换，隐式参数更加灵活，也更加难以掌握，和其它的一些特性结合起来能够达到常规特性所无法企及的功能，正因为这样所以才是Scala所必须要掌握的技能之一。
+隐式参数（Implicit Paramaters）引子顾名思义，隐式参数分为两个">
+<meta property="og:updated_time" content="2015-10-13T14:25:05.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Scala Implicits 之 Implicit Parameters">
+<meta name="twitter:description" content="前面的章节提到过Scala中的Implicit Conversions(隐式转换)，这篇文章来讲讲Implicit Parameters(隐式参数)。个人感觉相对于隐式转换，隐式参数更加灵活，也更加难以掌握，和其它的一些特性结合起来能够达到常规特性所无法企及的功能，正因为这样所以才是Scala所必须要掌握的技能之一。
+隐式参数（Implicit Paramaters）引子顾名思义，隐式参数分为两个">
+
+    
+    <link rel="alternative" href="/atom.xml" title="勋荣‘s blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="勋荣‘s blog" title="勋荣‘s blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="勋荣‘s blog">勋荣‘s blog</a></h1>
+				<h2 class="blog-motto">不积跬步，无以至千里</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= null ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/07/27/implicits-parameters/" title="Scala Implicits 之 Implicit Parameters" itemprop="url">Scala Implicits 之 Implicit Parameters</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Xunrong Rao" target="_blank" itemprop="author">Xunrong Rao</a>
+		
+  <p class="article-time">
+    <time datetime="2015-07-27T14:39:49.000Z" itemprop="datePublished"> 發表於 2015-07-27</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#隐式参数（Implicit_Paramaters）"><span class="toc-number">1.</span> <span class="toc-text">隐式参数（Implicit Paramaters）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引子"><span class="toc-number">1.1.</span> <span class="toc-text">引子</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>前面的章节提到过Scala中的<a href="http://" target="_blank" rel="external"><code>Implicit Conversions</code></a>(隐式转换)，这篇文章来讲讲<code>Implicit Parameters</code>(隐式参数)。个人感觉相对于隐式转换，隐式参数更加灵活，也更加难以掌握，和其它的一些特性结合起来能够达到常规特性所无法企及的功能，正因为这样所以才是Scala所必须要掌握的技能之一。</p>
+<h2 id="隐式参数（Implicit_Paramaters）">隐式参数（Implicit Paramaters）</h2><h3 id="引子"><strong>引子</strong></h3><p>顾名思义，隐式参数分为两个部分<code>Implicit</code>和<code>Parameters</code>，分别代表<code>隐式</code>及<code>参数</code>。正常情况下面定义函数或者方法的参数为：<br><figure class="highlight"><figcaption><span>addPrefix(s: String, prefix: String)```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#35843;&#29992;&#35813;&#20989;&#25968;&#30340;&#26041;&#24335;&#20026;&#65306;  &#10;```addPrefix(&#34;abc&#34;, &#34;***&#34;)</span><br></pre></td></tr></table></figure></p>
+<p>如果在参数的前面添加<code>implicit</code>，就将参数定义为了隐式参数，那么上述函数就变为： </p>
+<figure class="highlight"><figcaption><span>addPrefix(s: String)(implicit prefix: String)```</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#10;&#35843;&#29992;&#26041;&#24335;&#23601;&#21464;&#20026;&#20102;  &#10;```addPrefix(&#34;abc&#34;)(&#34;***&#34;)</span><br></pre></td></tr></table></figure>
+<p>这里参数的变化有两点，第一是进行了参数的<code>柯里化</code>；其次是添加了<code>implicit</code>关键字。</p>
+<p><code>implicit</code>的作用在于会从执行<code>addPrefix</code>的上下文环境中自动匹配与参数<code>prefix</code>类型相符的隐式变量，如： </p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">implicit</span> val prefix = <span class="string">"***"</span></span><br><span class="line">addPrefix(<span class="string">"abc"</span>) //the same as addPrefix(<span class="string">"abc"</span>, <span class="string">"***"</span>)</span><br></pre></td></tr></table></figure>
+<p>简单来说就是自动获取参数默认值，但是和一般的函数参数默认值不一样的是，这里的默认值可以根据执行环境的不同而动态变化。如果在执行的上下文环境中无法找到对应的隐式变量，则会编译报错：  </p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val prefix = <span class="string">"***"</span></span><br><span class="line">addPrefix(<span class="string">"abc"</span>) </span><br><span class="line"></span><br><span class="line">&lt;console&gt;:<span class="number">9</span>: error: could not find <span class="type">implicit</span> <span class="keyword">value</span> for <span class="type">parameter</span> prefix: String</span><br><span class="line">              addPrefix(<span class="string">"abc"</span>)</span><br></pre></td></tr></table></figure>
+<p>隐式参数的声明还有几点需要注意：  </p>
+<ul>
+<li><p>隐式参数必须是柯里化参数中最后一组；</p>
+</li>
+<li><p><code>implicit</code>声明作用于一组参数而不是一个；</p>
+</li>
+<li><p>应该避免出现同一类型的隐式参数；</p>
+</li>
+</ul>
+<p><em>隐式参数必须是柯里化参数中最后一组</em>  </p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(<span class="type">implicit</span> prefix: String)(s: String) </span><br><span class="line">&lt;console&gt;:<span class="number">1</span>: error: <span class="string">'='</span> expected but <span class="string">'('</span> found.</span><br><span class="line">       def addPrefix(<span class="type">implicit</span> prefix: String)(s: String)</span><br></pre></td></tr></table></figure>
+<p><code>implicit</code><em>声明作用于一组参数而不是一个</em>  </p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(s: String)(<span class="type">implicit</span> p: String, len: <span class="built_in">Int</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">implicit</span> val p = <span class="string">"*"</span></span><br><span class="line"><span class="type">implicit</span> val len = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">addPrefix(<span class="string">"abc"</span>)//the same as addPrefix(<span class="string">"abc"</span>)(<span class="string">"*"</span>)(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>可以看到这里<code>implicit</code>不仅仅是作用于参数<code>p</code>，也同样对<code>len</code>有效，因此这一组参数都是隐式的。</p>
+<p><em>应该避免出现同一类型的隐式参数</em>  </p>
+<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(s: String)(<span class="type">implicit</span> p1: String, p2: String)</span><br><span class="line"></span><br><span class="line"><span class="type">implicit</span> val pv1 = <span class="string">"*"</span></span><br><span class="line"><span class="type">implicit</span> val pv2 = <span class="string">"$"</span></span><br><span class="line"></span><br><span class="line">addPrefix(<span class="string">"abc"</span>)</span><br><span class="line"></span><br><span class="line">error: ambiguous <span class="type">implicit</span> values:</span><br><span class="line"> both <span class="keyword">value</span> pv1 of <span class="keyword">type</span> =&gt; String</span><br><span class="line"> and <span class="keyword">value</span> pv2 of <span class="keyword">type</span> =&gt; String</span><br><span class="line"> match expected <span class="keyword">type</span> String</span><br><span class="line">              addPrefix(<span class="string">"abc"</span>)</span><br></pre></td></tr></table></figure>
+<p>从错误信息可知，我们需要一个类型为<code>String</code>的隐式变量，但是现在有两个值满足要求，所以出现了二义性，编译器无法得知哪一个才是真正的，因为隐式参数是通过参数的类型区分的，因此这里<code>pv1</code>和<code>p2v</code>对于编译器来说是等价的。如果我们只是定义一个隐式变量，那么<code>p1</code>和<code>p2</code>接收的值就一样了，不能给两个隐式参数<code>p1</code>及<code>p2</code>设置不同的参数值。这里唯一的做法就是将<code>p1</code>和<code>p2</code>定义成不同的类型，如：  </p>
+<pre><code>def addPrefix(s: String)(<span class="type">implicit</span> p1: String, p2: Str)
+
+<span class="keyword">case</span> <span class="keyword">class</span> Str(str: String)
+
+<span class="type">implicit</span> val p1 = <span class="string">"*"</span>
+<span class="type">implicit</span> val p2 = Str(<span class="string">"$"</span>)
+
+addPrefix(<span class="string">"abc"</span>)
+
+res0: String = *$abc
+</code></pre>  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/scala/">scala</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="raoxunrong.github.io/2015/07/27/implicits-parameters/" data-title="Scala Implicits 之 Implicit Parameters | 勋荣‘s blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/21/implicit-conversions/"  title="Scala Implicits 之 Implicit Conversions">
+ <strong>下一篇：</strong><br/> 
+ <span>Scala Implicits 之 Implicit Conversions
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#隐式参数（Implicit_Paramaters）"><span class="toc-number">1.</span> <span class="toc-text">隐式参数（Implicit Paramaters）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#引子"><span class="toc-number">1.1.</span> <span class="toc-text">引子</span></a></li></ol></li></ol>
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/scala/" title="scala">scala<sup>2</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.thoughtworks.com/" target="_blank" title="ThoughtWorks">ThoughtWorks</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 勋荣的唠叨，关于软件工程实践，抑或计算机科学 <br/>
+			日积月累，点滴进步！.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Xunrong Rao">Xunrong Rao</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fnull' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: 'null'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
