@@ -4,22 +4,26 @@
 <head>
   <meta charset="UTF-8">
   
-    <title>勋荣‘s blog</title>
+    <title>泛型约束(Generalized Type Constraints) | 勋荣‘s blog</title>
     <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
     
     <meta name="author" content="Xunrong Rao">
     
 
     
-    <meta name="description" content="点滴记录">
-<meta property="og:type" content="website">
-<meta property="og:title" content="勋荣‘s blog">
-<meta property="og:url" content="raoxunrong.github.io/index.html">
+    <meta name="description" content="Scala作为一门基于jvm的语言，类型系统的实现与java类型系统有一定的相似之处，但是却又比java要复杂许多，如对scala的类型系统基础想要了解，可以查看hongjiang的blog中对于类型相关的文章，在此就不多做介绍。
+泛型约束(Generalized Type Constraints)泛型在Scala中到处都是，而且是类型系统中不可缺少的重中之重，一般来说，常规来说定义一个泛型类似于">
+<meta property="og:type" content="article">
+<meta property="og:title" content="泛型约束(Generalized Type Constraints)">
+<meta property="og:url" content="raoxunrong.github.io/2015/10/17/generalized-type-constraints/index.html">
 <meta property="og:site_name" content="勋荣‘s blog">
-<meta property="og:description" content="点滴记录">
+<meta property="og:description" content="Scala作为一门基于jvm的语言，类型系统的实现与java类型系统有一定的相似之处，但是却又比java要复杂许多，如对scala的类型系统基础想要了解，可以查看hongjiang的blog中对于类型相关的文章，在此就不多做介绍。
+泛型约束(Generalized Type Constraints)泛型在Scala中到处都是，而且是类型系统中不可缺少的重中之重，一般来说，常规来说定义一个泛型类似于">
+<meta property="og:updated_time" content="2015-10-17T10:19:36.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="勋荣‘s blog">
-<meta name="twitter:description" content="点滴记录">
+<meta name="twitter:title" content="泛型约束(Generalized Type Constraints)">
+<meta name="twitter:description" content="Scala作为一门基于jvm的语言，类型系统的实现与java类型系统有一定的相似之处，但是却又比java要复杂许多，如对scala的类型系统基础想要了解，可以查看hongjiang的blog中对于类型相关的文章，在此就不多做介绍。
+泛型约束(Generalized Type Constraints)泛型在Scala中到处都是，而且是类型系统中不可缺少的重中之重，一般来说，常规来说定义一个泛型类似于">
 
     
     <link rel="alternative" href="/atom.xml" title="勋荣‘s blog" type="application/atom+xml">
@@ -72,12 +76,10 @@
 </div>
     </header>
     <div id="container">
-      <div id="main">
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
   <h1 itemprop="name">
     
       <a href="/2015/10/17/generalized-type-constraints/" title="泛型约束(Generalized Type Constraints)" itemprop="url">泛型约束(Generalized Type Constraints)</a>
@@ -91,9 +93,16 @@
     
   </p>
 </header>
-    <div class="article-content">
-        
-        <p>Scala作为一门基于jvm的语言，类型系统的实现与java类型系统有一定的相似之处，但是却又比java要复杂许多，如对scala的类型系统基础想要了解，可以查看<a href="http://hongjiang.info/scala/" target="_blank" rel="external">hongjiang的blog</a>中对于类型相关的文章，在此就不多做介绍。</p>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			<ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型约束(Generalized_Type_Constraints)"><span class="toc-number">1.</span> <span class="toc-text">泛型约束(Generalized Type Constraints)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新功能的List"><span class="toc-number">1.1.</span> <span class="toc-text">新功能的List</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#<:<约束原理"><span class="toc-number">1.2.</span> <span class="toc-text"><:<约束原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#=:=约束原理"><span class="toc-number">1.3.</span> <span class="toc-text">=:=约束原理</span></a></li></ol></li></ol>
+		
+		</div>
+		
+		<p>Scala作为一门基于jvm的语言，类型系统的实现与java类型系统有一定的相似之处，但是却又比java要复杂许多，如对scala的类型系统基础想要了解，可以查看<a href="http://hongjiang.info/scala/" target="_blank" rel="external">hongjiang的blog</a>中对于类型相关的文章，在此就不多做介绍。</p>
 <h2 id="泛型约束(Generalized_Type_Constraints)">泛型约束(Generalized Type Constraints)</h2><p>泛型在Scala中到处都是，而且是类型系统中不可缺少的重中之重，一般来说，常规来说定义一个泛型类似于：  </p>
 <figure class="highlight json"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">[T &lt;: String]</span><br><span class="line"></span><br><span class="line">[T &gt;: String]</span><br><span class="line"></span><br><span class="line">[+T]</span><br><span class="line"></span><br><span class="line">[-T]</span><br><span class="line"></span><br><span class="line">[T &lt;% String]</span><br></pre></td></tr></table></figure>
 <p>这里列举的是泛型使用中常用到的<code>upper bounds</code>, <code>lower bounds</code>, <code>covariance</code>, <code>contravariance</code>及<code>view bounds</code>的基本语法，下面我们通过这些语法来解决一个实际的问题。</p>
@@ -149,14 +158,9 @@
 <p>一样的有函数类型定义<code>class =:=</code>，单例<code>singleton_=:=</code>，隐式转换<code>implicit def tpEquals[A]: A</code>，初看的话和<code>&lt;:&lt;</code>一模一样。只有一个细小的差别：  </p>
 <figure class="highlight gradle"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">sealed <span class="keyword">abstract</span> <span class="keyword">class</span> &lt;:&lt;[-<span class="keyword">From</span>, +To] <span class="keyword">extends</span> (<span class="keyword">From</span> =&gt; To)</span><br><span class="line"></span><br><span class="line">sealed <span class="keyword">abstract</span> <span class="keyword">class</span> =:=[<span class="keyword">From</span>, To] <span class="keyword">extends</span> (<span class="keyword">From</span> =&gt; To)</span><br></pre></td></tr></table></figure>
 <p><code>[-From, +To]</code> vs <code>[From, To]</code><br>也就是<code>&lt;:&lt;</code>的入参是逆变的，返回值是协变的。而在定义<code>=:=</code>时，这些变化点都没有了，那么也就很容易理解了。</p>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
+  
+	</div>
+		<footer class="article-footer clearfix">
 <div class="article-catetags">
 
 
@@ -169,227 +173,43 @@
 
 
 
-
-<div class="comments-count">
+	<div class="article-share" id="share">
 	
-</div>
+	  <div data-url="raoxunrong.github.io/2015/10/17/generalized-type-constraints/" data-title="泛型约束(Generalized Type Constraints) | 勋荣‘s blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
 
 </footer>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/27/implicits-parameters/" title="Scala Implicits 之 Implicit Parameters" itemprop="url">Scala Implicits 之 Implicit Parameters</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Xunrong Rao" target="_blank" itemprop="author">Xunrong Rao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-27T14:39:49.000Z" itemprop="datePublished"> 發表於 2015-07-27</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>前面的章节提到过Scala中的<a href="http://raoxunrong.github.io/2015/07/21/implicit-conversions/"><code>Implicit Conversions</code></a>(隐式转换)，这篇文章来讲讲<code>Implicit Parameters</code>(隐式参数)。个人感觉相对于隐式转换，隐式参数更加灵活，也更加难以掌握，和其它的一些特性结合起来能够达到常规特性所无法企及的功能，正因为这样所以才是Scala所必须要掌握的技能之一。</p>
-<h2 id="隐式参数（Implicit_Paramaters）">隐式参数（Implicit Paramaters）</h2><h3 id="引子"><strong>引子</strong></h3><p>顾名思义，隐式参数分为两个部分<code>Implicit</code>和<code>Parameters</code>，分别代表<code>隐式</code>及<code>参数</code>。正常情况下面定义函数或者方法的参数为：  </p>
-<figure class="highlight groovy"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">def</span> addPrefix(<span class="string">s:</span> String, <span class="string">prefix:</span> String)</span><br></pre></td></tr></table></figure>
-<p>调用该函数的方式为：  </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">addPrefix</span><span class="params">(<span class="string">"abc"</span>, <span class="string">"***"</span>)</span></span></span><br></pre></td></tr></table></figure>
-<p>如果在参数的前面添加<code>implicit</code>，就将参数定义为了隐式参数，那么上述函数就变为： </p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(s: String)(<span class="type">implicit</span> prefix: String)</span><br></pre></td></tr></table></figure>
-<p>调用方式就变为了  </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">addPrefix</span><span class="params">(<span class="string">"abc"</span>)</span><span class="params">(<span class="string">"***"</span>)</span></span></span><br></pre></td></tr></table></figure>
-<p>这里参数的变化有两点，第一是进行了参数的<code>柯里化</code>；其次是添加了<code>implicit</code>关键字。</p>
-<p><code>implicit</code>的作用在于会从执行<code>addPrefix</code>的上下文环境中自动匹配与参数<code>prefix</code>类型相符的隐式变量，如： </p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">implicit</span> val prefix = <span class="string">"***"</span></span><br><span class="line">addPrefix(<span class="string">"abc"</span>) //the same as addPrefix(<span class="string">"abc"</span>, <span class="string">"***"</span>)</span><br></pre></td></tr></table></figure>
-<p>简单来说就是自动获取参数默认值，但是和一般的函数参数默认值不一样的是，这里的默认值可以根据执行环境的不同而动态变化。如果在执行的上下文环境中无法找到对应的隐式变量，则会编译报错：  </p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">val prefix = <span class="string">"***"</span></span><br><span class="line">addPrefix(<span class="string">"abc"</span>) </span><br><span class="line"></span><br><span class="line">&lt;console&gt;:<span class="number">9</span>: error: could not find <span class="type">implicit</span> <span class="keyword">value</span> for <span class="type">parameter</span> prefix: String</span><br><span class="line">              addPrefix(<span class="string">"abc"</span>)</span><br></pre></td></tr></table></figure>
-<p>隐式参数的声明还有几点需要注意：  </p>
-<ul>
-<li><p>隐式参数必须是柯里化参数中最后一组；</p>
-</li>
-<li><p><code>implicit</code>声明作用于一组参数而不是一个；</p>
-</li>
-<li><p>应该避免出现同一类型的隐式参数；</p>
-</li>
-</ul>
-<p><em>隐式参数必须是柯里化参数中最后一组</em>  </p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(<span class="type">implicit</span> prefix: String)(s: String) </span><br><span class="line">&lt;console&gt;:<span class="number">1</span>: error: <span class="string">'='</span> expected but <span class="string">'('</span> found.</span><br><span class="line">       def addPrefix(<span class="type">implicit</span> prefix: String)(s: String)</span><br></pre></td></tr></table></figure>
-<p><code>implicit</code><em>声明作用于一组参数而不是一个</em>  </p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(s: String)(<span class="type">implicit</span> p: String, len: <span class="built_in">Int</span>)</span><br><span class="line"></span><br><span class="line"><span class="type">implicit</span> val p = <span class="string">"*"</span></span><br><span class="line"><span class="type">implicit</span> val len = <span class="number">3</span></span><br><span class="line"></span><br><span class="line">addPrefix(<span class="string">"abc"</span>)//the same as addPrefix(<span class="string">"abc"</span>)(<span class="string">"*"</span>)(<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
-<p>可以看到这里<code>implicit</code>不仅仅是作用于参数<code>p</code>，也同样对<code>len</code>有效，因此这一组参数都是隐式的。</p>
-<p><em>应该避免出现同一类型的隐式参数</em>  </p>
-<figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">def addPrefix(s: String)(<span class="type">implicit</span> p1: String, p2: String)</span><br><span class="line"></span><br><span class="line"><span class="type">implicit</span> val pv1 = <span class="string">"*"</span></span><br><span class="line"><span class="type">implicit</span> val pv2 = <span class="string">"$"</span></span><br><span class="line"></span><br><span class="line">addPrefix(<span class="string">"abc"</span>)</span><br><span class="line"></span><br><span class="line">error: ambiguous <span class="type">implicit</span> values:</span><br><span class="line"> both <span class="keyword">value</span> pv1 of <span class="keyword">type</span> =&gt; String</span><br><span class="line"> and <span class="keyword">value</span> pv2 of <span class="keyword">type</span> =&gt; String</span><br><span class="line"> match expected <span class="keyword">type</span> String</span><br><span class="line">              addPrefix(<span class="string">"abc"</span>)</span><br></pre></td></tr></table></figure>
-<p>从错误信息可知，我们需要一个类型为<code>String</code>的隐式变量，但是现在有两个值满足要求，所以出现了二义性，编译器无法得知哪一个才是真正的，因为隐式参数是通过参数的类型区分的，因此这里<code>pv1</code>和<code>p2v</code>对于编译器来说是等价的。如果我们只是定义一个隐式变量，那么<code>p1</code>和<code>p2</code>接收的值就一样了，不能给两个隐式参数<code>p1</code>及<code>p2</code>设置不同的参数值。这里唯一的做法就是将<code>p1</code>和<code>p2</code>定义成不同的类型，如：  </p>
-<pre><code>def addPrefix(s: String)(<span class="type">implicit</span> p1: String, p2: Str)
-
-<span class="keyword">case</span> <span class="keyword">class</span> Str(str: String)
-
-<span class="type">implicit</span> val p1 = <span class="string">"*"</span>
-<span class="type">implicit</span> val p2 = Str(<span class="string">"$"</span>)
-
-addPrefix(<span class="string">"abc"</span>)
-
-res0: String = *$abc
-</code></pre>
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/scala/">scala</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
+   	       
+	</article>
 	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/07/27/implicits-parameters/"  title="Scala Implicits 之 Implicit Parameters">
+ <strong>下一篇：</strong><br/> 
+ <span>Scala Implicits 之 Implicit Parameters
+</span>
+</a>
 </div>
 
-</footer>
+</nav>
 
-
-    </article>
-
-
-
-
-
-
-   
-    
-    <article class="post-expand post" itemprop="articleBody"> 
-        <header class="article-info clearfix">
-  <h1 itemprop="name">
-    
-      <a href="/2015/07/21/implicit-conversions/" title="Scala Implicits 之 Implicit Conversions" itemprop="url">Scala Implicits 之 Implicit Conversions</a>
-  </h1>
-  <p class="article-author">By
-       
-		<a href="/about" title="Xunrong Rao" target="_blank" itemprop="author">Xunrong Rao</a>
-		
-  <p class="article-time">
-    <time datetime="2015-07-21T15:50:06.000Z" itemprop="datePublished"> 發表於 2015-07-21</time>
-    
-  </p>
-</header>
-    <div class="article-content">
-        
-        <p>Scala作为一门混合了函数式及面向对象思想的语言，在新手刚开始学习的时候总会碰到很多之前没有听到或不熟悉的概念，因此也就形成了我们做技术的人常说的坑，今天就来谈谈scala生态圈中的<code>implicit conversions</code>（即隐式转换），在后面还会陆续写implicits系列的文章，其中包括<code>implicit parameters</code>（隐式参数），<code>implicit classes</code>（隐式类）等。</p>
-<h2 id="隐式转换（Implicit_Conversions）">隐式转换（Implicit Conversions）</h2><h3 id="引子"><strong>引子</strong></h3><p>假设我们在设计一个用户注册功能，其中需要判断所输入内容的合法性，包括：  </p>
-<ol>
-<li>是否是邮件</li>
-<li>是否超过指定长度</li>
-<li>是否含有非法字符</li>
-<li>……</li>
-</ol>
-<p>按照传统的写法我们会编写一个Validator，伪代码如下：  </p>
-<figure class="highlight nimrod"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">class <span class="type">EmailValidator</span>(email) &#123;</span><br><span class="line">	</span><br><span class="line">	boolean isEmail() <span class="decorator">&#123;...&#125;</span></span><br><span class="line">	</span><br><span class="line">	boolean exceedMaxLength()<span class="decorator">&#123;...&#125;</span></span><br><span class="line"></span><br><span class="line">	boolean hasInvalidChars()<span class="decorator">&#123;...&#125;</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-<p>调用方式如下： </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">val emailValidator = new <span class="function"><span class="title">EmailValidator</span><span class="params">(<span class="string">"123@gmail.com"</span>)</span></span></span><br><span class="line"></span><br><span class="line">emailValidator.<span class="function"><span class="title">isEmail</span><span class="params">()</span></span></span><br><span class="line"></span><br><span class="line">emailValidator.<span class="function"><span class="title">exceedMaxLength</span><span class="params">()</span></span></span><br><span class="line"></span><br><span class="line">emailValidator.<span class="function"><span class="title">hasInvalidChars</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>代码看起来并没有什么问题，以为一直以来就是这样的，因为我们需要通过validator来进行验证，而email本身是没有验证功能的。所以看到上述代码中通过email的内容构造了一个email validator，然后调用该validator的各种不同的验证方式来对email内容进行验证。  </p>
-<p>要理解隐式转换(implicit conversions)，先把这里两个单词拆分出来，分为“隐式”和“转换”。再回到上面的代码：  </p>
-<figure class="highlight scala"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">val</span> <span class="title">emailValidator</span> =</span> <span class="keyword">new</span> <span class="type">EmailValidator</span>(<span class="string">"123@gmail.com"</span>)</span><br></pre></td></tr></table></figure>
-<p>对邮件地址做验证是需要邮件验证器的，这里就是把<code>123@gmail.com</code>这个邮件地址“转换”成了一个验证器，也就是说转换“conversions”的本质是<strong>将对象A的instance转换为对象B的instance</strong>。这样就能使用对象B的各种行为了。</p>
-<p>解决了“转换”，回头再看看另外一半“隐式”，与隐式相对应的单词是“显式”。<br>上面的代码的转换就是“显式”的，为什么这么说？可以明确的看到从<code>23@gmail.com</code>转换为<code>EmailValidator</code>的整个过程。<br>不难想象，隐式转换就是自动将email自动转换成一个validator对象，那么这有什么好处？看看下面的代码:</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">isEmail</span><span class="params">()</span></span></span><br><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">exceedMaxLength</span><span class="params">()</span></span></span><br><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">hasInvalidChars</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>从代码的可读性上来说，任何人都能一眼看出来代码在做什么事情，也就是可读性明显增强。通过隐式转换写出上面的代码，在scala里面是非常容易的事情：  </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">implicit def <span class="function"><span class="title">emailToValidator</span><span class="params">(email: String)</span></span> = new <span class="function"><span class="title">EmailValidator</span><span class="params">(email)</span></span>  </span><br><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">isEmail</span><span class="params">()</span></span></span><br><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">exceedMaxLength</span><span class="params">()</span></span></span><br><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">hasInvalidChars</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>由此来看“隐式转换”(implicit conversions)就是<br><strong>“自动”的将对象A的instance“转换”为对象B的instance</strong><br>在此Scala的编译器在编译代码：  </p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">isEmail</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>会自动插入函数emailToValidator的调用，也就是编译期真正的代码是：</p>
-<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="title">emailToValidator</span><span class="params">(<span class="string">"123@gmail.com"</span>)</span></span>.<span class="function"><span class="title">isEmail</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>这一切都是编译器隐式的操作，这也就是为什么使用“implicits”的原因。</p>
-<h3 id="使用场景">使用场景</h3><hr>
-<ul>
-<li><h4 id="隐式转换赋值"><strong>隐式转换赋值</strong></h4><p>正常情况下，在静态语言中下面这样的赋值语句是不成立的：  </p>
-  <figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="variable"><span class="keyword">val</span> intValue</span>: <span class="typename">Int</span> = <span class="string">"123"</span></span><br></pre></td></tr></table></figure>
-<p>  但是有了隐式转换，就可以做到了：  </p>
-  <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">implicit</span> def strToInt(str: String): <span class="built_in">Int</span> = <span class="type">Integer</span>.parseInt(str)</span><br><span class="line">val intValue: <span class="built_in">Int</span> = <span class="string">"123"</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><h4 id="为已有类型添加行为"><strong>为已有类型添加行为</strong></h4><p>  上面<code>Validator</code>的例子中，<code>String</code>类型的对象都拥有了验证邮件的能力。相当于在面向对象中的<code>wrapper</code>模式。  </p>
-  <figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="string">"123@gmail.com"</span>.<span class="function"><span class="title">isEmail</span><span class="params">()</span></span></span><br></pre></td></tr></table></figure>
-<p>  这里<code>String</code>是转换成了我们已知的<code>Validator</code>类型，因此可以作为<code>Validator</code>来使用。假如现在仅仅需要给<code>String</code>添加一个特定的行为<code>isEmail</code>来判断是否是邮件，为此去新建一个<code>Validator</code>类，就有点过重，可以通过匿名的隐式类转换解决，如：  </p>
-  <figure class="highlight fortran"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="type">implicit</span> def stringToValidator(str: String) = &#123;</span><br><span class="line">   new &#123;</span><br><span class="line">     	def isEmail: Boolean = ???</span><br><span class="line">   	&#125;</span><br><span class="line"> 	&#125;</span><br><span class="line"></span><br><span class="line"> 	<span class="string">"123@gmail.com"</span>.isEmail</span><br></pre></td></tr></table></figure>
-<p>  此时<code>123@gmail.com</code>转换成的新类型为：  </p>
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">Object &#123;<span class="function"><span class="keyword">def</span> <span class="title">isEmail</span>:</span> Boolean&#125;</span><br></pre></td></tr></table></figure>
-<p>在Scala的2.10版本之后引入了一个新的概念叫做<strong>Implicit Classes</strong>，实际上就是匿名类转换的一个语法糖。在后面的章节会介绍。</p>
-</li>
-<li><h4 id="增强与新类型的互操作"><strong>增强与新类型的互操作</strong></h4><p>  正常情况下，数值类型是不能够和字符串进行运算的，在隐式转换后这些操作看起来是可行的：  </p>
-  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">implicit <span class="function"><span class="keyword">def</span> <span class="title">strToInt</span><span class="params">(str: String)</span>:</span> Int = Integer.parseInt(str)</span><br><span class="line"></span><br><span class="line"><span class="number">5</span> * <span class="string">"123"</span>  </span><br><span class="line"></span><br><span class="line"><span class="number">8</span> + <span class="string">"234"</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<ul>
-<li><h4 id="构造“新”语法"><strong>构造“新”语法</strong></h4><p>  在Scala中对于Map的构造使用的语法如下：  </p>
-  <figure class="highlight lasso"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">Map</span>(<span class="number">1</span> <span class="subst">-&gt; </span><span class="string">"one"</span>, <span class="number">2</span> <span class="subst">-&gt; </span><span class="string">"two"</span>, <span class="number">3</span> <span class="subst">-&gt; </span><span class="string">"three"</span>)</span><br></pre></td></tr></table></figure>
-<p>  但是<code>-&gt;</code>并不是scala的关键字，实际上它是一个方法，此处可以说是一个函数，其定义如下：  </p>
-  <figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">class ArrowAssoc[<span class="link_label">A</span>](<span class="link_url">x: A</span>) &#123;</span><br><span class="line"><span class="code">     def -&gt; [B](y: B): Tuple2[A, B] = Tuple2(x, y)</span></span><br><span class="line">   &#125;</span><br><span class="line">   </span><br><span class="line">implicit def any2ArrowAssoc[<span class="link_label">A</span>](<span class="link_url">x: A</span>): ArrowAssoc[A] = </span><br><span class="line"><span class="code">     new ArrowAssoc(x)</span></span><br></pre></td></tr></table></figure>
-<p>  这里通过高阶类型使得所有对象都能够转换成<code>ArrowAssoc</code>，而<code>ArrowAssoc</code>含有方法<code>-&gt;</code>，这样看起来好像是发明了一个新的语法(因为在此处该转换对所有的class都生效)，实际上此处的“新”语法的生成不仅仅是因为隐式转换的功劳，还有高阶类型(以后的章节会介绍)，但是正是因为有了隐式转换的存在，使得你能够非常容易的构造属于你自己的DSL，而且非常的自然。</p>
-</li>
-</ul>
-
-        
-        
-        <p class="article-more-link">
-          
-       </p>
-    </div>
-    <footer class="article-footer clearfix">
-<div class="article-catetags">
-
-
-  <div class="article-tags">
-  
-  <span></span> <a href="/tags/scala/">scala</a>
-  </div>
-
-</div>
-
-
-
-
-<div class="comments-count">
 	
-</div>
 
-</footer>
-
-
-    </article>
-
-
-
-
-
-
-
-</div>
+</div>  
       <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ <ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#泛型约束(Generalized_Type_Constraints)"><span class="toc-number">1.</span> <span class="toc-text">泛型约束(Generalized Type Constraints)</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#新功能的List"><span class="toc-number">1.1.</span> <span class="toc-text">新功能的List</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#<:<约束原理"><span class="toc-number">1.2.</span> <span class="toc-text"><:<约束原理</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#=:=约束原理"><span class="toc-number">1.3.</span> <span class="toc-text">=:=约束原理</span></a></li></ol></li></ol>
+ 
+  </div>
 
 <div id="asidepart">
 <div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
@@ -520,12 +340,89 @@ $(document).ready(function(){
       m.removeClass('moveMain');
       a.css('display', 'block').removeClass('fadeOut');
       o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
         
     }
   });
 });
 </script>
 
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
 
 
 
@@ -617,4 +514,4 @@ _ts(option);
 <!-- Tiny_search End -->
 
   </body>
- </html>
+</html>
