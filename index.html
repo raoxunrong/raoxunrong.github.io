@@ -80,6 +80,76 @@
         <header class="article-info clearfix">
   <h1 itemprop="name">
     
+      <a href="/2015/11/23/tuple1/" title="tuple1" itemprop="url">tuple1</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Xunrong Rao" target="_blank" itemprop="author">Xunrong Rao</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-23T14:40:02.000Z" itemprop="datePublished"> 發表於 2015-11-23</time>
+    
+  </p>
+</header>
+    <div class="article-content">
+        
+        <p>scala和很多语言一样是支持<code>tuple</code>的，但是在scala中对于<code>tuple</code>的元素个数是有限制的，和函数定义一样，最大值都是22，也就是在scala中是从Tuple1到Tuple22。Tuple2直至Tuple22这都很好理解，因为你是hold住了多个值，但是Tuple1又有什么作用呢？</p>
+<p>定义tuple是在数据外面套上小括号，如</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="variable"><span class="keyword">val</span> tuple2</span> = (<span class="number">1</span>, <span class="string">"abc"</span>)</span><br><span class="line">tuple2: (<span class="typename">Int</span>, String) = (<span class="number">1</span>,abc)</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="variable"><span class="keyword">val</span> tuple3</span> = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">tuple3: (<span class="typename">Int</span>, <span class="typename">Int</span>, <span class="typename">Int</span>) = (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>但是对于tuple1却无法适用：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="variable"><span class="keyword">val</span> tp1</span> = (<span class="string">"abc"</span>)</span><br><span class="line">tp1: String = abc</span><br></pre></td></tr></table></figure>
+<p>可以看到在<code>abc</code>外层直接加上小括号得到的数据类型为<code>String</code>，与定义原始类型并无区别，也就是说这样是得不到<code>Tuple1</code>的，我们得调用其本身的<code>apply</code>方法才能构造：  </p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val tuple1 = Tuple1.apply<span class="params">(<span class="string">"abc"</span>)</span></span><br><span class="line">tuple1: <span class="params">(String,)</span> = <span class="params">(abc,)</span></span><br></pre></td></tr></table></figure>
+<p>既然scala中都没法自动为我们构建<code>Tuple1</code>，本身<code>Tuple1</code>就和原始类型的值是一样的，那为何还多此一举设计它呢？<br>在scala中，所有的<code>TupleX</code>都是case class，也就是能够做<code>pattern match</code>的。看看下面的<a href="http://scala-language.1934581.n4.nabble.com/for-x-String-lt-xs-yield-Why-Hello-There-Tuple1-td2065814.html" target="_blank" rel="external">例子</a>：  </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val xs = <span class="built_in">List</span>(<span class="number">1</span>, <span class="string">"abc"</span>, <span class="number">2</span>, <span class="string">"def"</span>) </span><br><span class="line">xs: <span class="built_in">List</span>[Any] = <span class="built_in">List</span>(<span class="number">1</span>, abc, <span class="number">2</span>, def) </span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">for</span> ((x: <span class="built_in">String</span>) &lt;- xs) yield x </span><br><span class="line">&lt;console&gt;:<span class="number">7</span>: error: type mismatch; </span><br><span class="line"> found   : (<span class="built_in">String</span>) =&gt; <span class="built_in">String</span> </span><br><span class="line"> required: (Any) =&gt; ? </span><br><span class="line">      <span class="keyword">for</span> ((x: <span class="built_in">String</span>) &lt;- xs) yield x </span><br><span class="line">                        ^</span><br></pre></td></tr></table></figure>
+<p>如果想要将<code>xs</code>中的所有字符串类型的值filter出来，按照上面的方法是行不通的，<code>xs</code>现在的类型已经泛化成了<code>Any</code>，没有办法知道哪些元素是字符串类型，因此会报错。  </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; xs.filter &#123; value =&gt;</span><br><span class="line">     |       value match &#123;</span><br><span class="line">     |         <span class="keyword">case</span> _: <span class="built_in">String</span> =&gt; <span class="keyword">true</span></span><br><span class="line">     |         <span class="keyword">case</span> _ =&gt; <span class="keyword">false</span></span><br><span class="line">     |       &#125;</span><br><span class="line">     |     &#125;</span><br><span class="line">res6: <span class="built_in">List</span>[Any] = <span class="built_in">List</span>(abc, def)</span><br></pre></td></tr></table></figure>
+<p>因为在此只是关心类型为<code>String</code>的元素，但是偏函数却要处理其他的可能性，写出来的代码就感觉有些冗余，如果之前的失败的for推导中的写法能够生效，那么可读性就要高些：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">for</span> (<span class="function"><span class="title">Tuple1</span><span class="params">(x: String)</span></span> &lt;- xs.<span class="function"><span class="title">map</span><span class="params">(Tuple1.apply(_)</span></span>)) yield x</span><br><span class="line">res7: List[String] = <span class="function"><span class="title">List</span><span class="params">(abc, def)</span></span></span><br></pre></td></tr></table></figure>
+<p>这里对原始的数据类型进行了一次<code>uplift</code>操作，那么以前异构的<code>String</code>和<code>Int</code>现在都同构成为了同一种数据类型<code>Tuple1</code>。这样scala的类型系统就能自动推导基于<code>Tuple1</code>的<code>pattern matching</code>了。<br>其实这里的本质在于<code>uplift</code>，下面的代码也是能够工作的：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">for</span> (<span class="function"><span class="title">Some</span><span class="params">(x: String)</span></span> &lt;- xs.<span class="function"><span class="title">map</span><span class="params">(Some(_)</span></span>)) yield x</span><br><span class="line">res8: List[String] = <span class="function"><span class="title">List</span><span class="params">(abc, def)</span></span></span><br></pre></td></tr></table></figure>
+<p>可是<code>Some</code>更多的语义在于和<code>None</code>相对，如果想要表示数据值本身的话，在我看来<code>Tuple1</code>才是更好的选择！</p>
+
+        
+        
+        <p class="article-more-link">
+          
+       </p>
+    </div>
+    <footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/scala/">scala</a>
+  </div>
+
+</div>
+
+
+
+
+<div class="comments-count">
+	
+</div>
+
+</footer>
+
+
+    </article>
+
+
+
+
+
+
+   
+    
+    <article class="post-expand post" itemprop="articleBody"> 
+        <header class="article-info clearfix">
+  <h1 itemprop="name">
+    
       <a href="/2015/10/17/generalized-type-constraints/" title="泛型约束(Generalized Type Constraints)" itemprop="url">泛型约束(Generalized Type Constraints)</a>
   </h1>
   <p class="article-author">By
@@ -403,7 +473,7 @@ res0: String = *$abc
 		<ul class="clearfix">
 		
 			
-				<li><a href="/tags/scala/" title="scala">scala<sup>3</sup></a></li>
+				<li><a href="/tags/scala/" title="scala">scala<sup>4</sup></a></li>
 			
 		
 		</ul>

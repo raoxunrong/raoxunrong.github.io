@@ -1,0 +1,480 @@
+
+ <!DOCTYPE HTML>
+<html >
+<head>
+  <meta charset="UTF-8">
+  
+    <title>tuple1 | 勋荣‘s blog</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    
+    <meta name="author" content="Xunrong Rao">
+    
+
+    
+    <meta name="description" content="scala和很多语言一样是支持tuple的，但是在scala中对于tuple的元素个数是有限制的，和函数定义一样，最大值都是22，也就是在scala中是从Tuple1到Tuple22。Tuple2直至Tuple22这都很好理解，因为你是hold住了多个值，但是Tuple1又有什么作用呢？
+定义tuple是在数据外面套上小括号，如
+12345scala&amp;gt; val tuple2 = (1, &quot;a">
+<meta property="og:type" content="article">
+<meta property="og:title" content="tuple1">
+<meta property="og:url" content="raoxunrong.github.io/2015/11/23/tuple1/index.html">
+<meta property="og:site_name" content="勋荣‘s blog">
+<meta property="og:description" content="scala和很多语言一样是支持tuple的，但是在scala中对于tuple的元素个数是有限制的，和函数定义一样，最大值都是22，也就是在scala中是从Tuple1到Tuple22。Tuple2直至Tuple22这都很好理解，因为你是hold住了多个值，但是Tuple1又有什么作用呢？
+定义tuple是在数据外面套上小括号，如
+12345scala&amp;gt; val tuple2 = (1, &quot;a">
+<meta property="og:updated_time" content="2015-11-23T15:33:49.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="tuple1">
+<meta name="twitter:description" content="scala和很多语言一样是支持tuple的，但是在scala中对于tuple的元素个数是有限制的，和函数定义一样，最大值都是22，也就是在scala中是从Tuple1到Tuple22。Tuple2直至Tuple22这都很好理解，因为你是hold住了多个值，但是Tuple1又有什么作用呢？
+定义tuple是在数据外面套上小括号，如
+12345scala&amp;gt; val tuple2 = (1, &quot;a">
+
+    
+    <link rel="alternative" href="/atom.xml" title="勋荣‘s blog" type="application/atom+xml">
+    
+    
+    <link rel="icon" href="/img/favicon.ico">
+    
+    
+    <link rel="apple-touch-icon" href="/img/jacman.jpg">
+    <link rel="apple-touch-icon-precomposed" href="/img/jacman.jpg">
+    
+    <link rel="stylesheet" href="/css/style.css" type="text/css">
+</head>
+
+  <body>
+    <header>
+      
+<div>
+		
+			<div id="imglogo">
+				<a href="/"><img src="/img/logo.png" alt="勋荣‘s blog" title="勋荣‘s blog"/></a>
+			</div>
+			
+			<div id="textlogo">
+				<h1 class="site-name"><a href="/" title="勋荣‘s blog">勋荣‘s blog</a></h1>
+				<h2 class="blog-motto">不积跬步，无以至千里</h2>
+			</div>
+			<div class="navbar"><a class="navbutton navmobile" href="#" title="菜單">
+			</a></div>
+			<nav class="animated">
+				<ul>
+					<ul>
+					 
+						<li><a href="/">Home</a></li>
+					
+						<li><a href="/archives">Archives</a></li>
+					
+						<li><a href="/about">About</a></li>
+					
+					<li>
+ 					
+						<form class="search" action="http://zhannei.baidu.com/cse/search" target="_blank">
+							<label>Search</label>
+						<input name="s" type="hidden" value= null ><input type="text" name="q" size="30" placeholder="搜索"><br>
+						</form>
+					
+					</li>
+				</ul>
+			</nav>			
+</div>
+    </header>
+    <div id="container">
+      <div id="main" class="post" itemscope itemprop="blogPost">
+  
+	<article itemprop="articleBody"> 
+		<header class="article-info clearfix">
+  <h1 itemprop="name">
+    
+      <a href="/2015/11/23/tuple1/" title="tuple1" itemprop="url">tuple1</a>
+  </h1>
+  <p class="article-author">By
+       
+		<a href="/about" title="Xunrong Rao" target="_blank" itemprop="author">Xunrong Rao</a>
+		
+  <p class="article-time">
+    <time datetime="2015-11-23T14:40:02.000Z" itemprop="datePublished"> 發表於 2015-11-23</time>
+    
+  </p>
+</header>
+	<div class="article-content">
+		
+		<div id="toc" class="toc-article">
+			<strong class="toc-title">文章目錄</strong>
+		
+			
+		
+		</div>
+		
+		<p>scala和很多语言一样是支持<code>tuple</code>的，但是在scala中对于<code>tuple</code>的元素个数是有限制的，和函数定义一样，最大值都是22，也就是在scala中是从Tuple1到Tuple22。Tuple2直至Tuple22这都很好理解，因为你是hold住了多个值，但是Tuple1又有什么作用呢？</p>
+<p>定义tuple是在数据外面套上小括号，如</p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="variable"><span class="keyword">val</span> tuple2</span> = (<span class="number">1</span>, <span class="string">"abc"</span>)</span><br><span class="line">tuple2: (<span class="typename">Int</span>, String) = (<span class="number">1</span>,abc)</span><br><span class="line"></span><br><span class="line">scala&gt; <span class="variable"><span class="keyword">val</span> tuple3</span> = (<span class="number">1</span>, <span class="number">2</span>, <span class="number">3</span>)</span><br><span class="line">tuple3: (<span class="typename">Int</span>, <span class="typename">Int</span>, <span class="typename">Int</span>) = (<span class="number">1</span>,<span class="number">2</span>,<span class="number">3</span>)</span><br></pre></td></tr></table></figure>
+<p>但是对于tuple1却无法适用：  </p>
+<figure class="highlight kotlin"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="variable"><span class="keyword">val</span> tp1</span> = (<span class="string">"abc"</span>)</span><br><span class="line">tp1: String = abc</span><br></pre></td></tr></table></figure>
+<p>可以看到在<code>abc</code>外层直接加上小括号得到的数据类型为<code>String</code>，与定义原始类型并无区别，也就是说这样是得不到<code>Tuple1</code>的，我们得调用其本身的<code>apply</code>方法才能构造：  </p>
+<figure class="highlight openscad"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val tuple1 = Tuple1.apply<span class="params">(<span class="string">"abc"</span>)</span></span><br><span class="line">tuple1: <span class="params">(String,)</span> = <span class="params">(abc,)</span></span><br></pre></td></tr></table></figure>
+<p>既然scala中都没法自动为我们构建<code>Tuple1</code>，本身<code>Tuple1</code>就和原始类型的值是一样的，那为何还多此一举设计它呢？<br>在scala中，所有的<code>TupleX</code>都是case class，也就是能够做<code>pattern match</code>的。看看下面的<a href="http://scala-language.1934581.n4.nabble.com/for-x-String-lt-xs-yield-Why-Hello-There-Tuple1-td2065814.html" target="_blank" rel="external">例子</a>：  </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; val xs = <span class="built_in">List</span>(<span class="number">1</span>, <span class="string">"abc"</span>, <span class="number">2</span>, <span class="string">"def"</span>) </span><br><span class="line">xs: <span class="built_in">List</span>[Any] = <span class="built_in">List</span>(<span class="number">1</span>, abc, <span class="number">2</span>, def) </span><br><span class="line"></span><br><span class="line">scala&gt; <span class="keyword">for</span> ((x: <span class="built_in">String</span>) &lt;- xs) yield x </span><br><span class="line">&lt;console&gt;:<span class="number">7</span>: error: type mismatch; </span><br><span class="line"> found   : (<span class="built_in">String</span>) =&gt; <span class="built_in">String</span> </span><br><span class="line"> required: (Any) =&gt; ? </span><br><span class="line">      <span class="keyword">for</span> ((x: <span class="built_in">String</span>) &lt;- xs) yield x </span><br><span class="line">                        ^</span><br></pre></td></tr></table></figure>
+<p>如果想要将<code>xs</code>中的所有字符串类型的值filter出来，按照上面的方法是行不通的，<code>xs</code>现在的类型已经泛化成了<code>Any</code>，没有办法知道哪些元素是字符串类型，因此会报错。  </p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; xs.filter &#123; value =&gt;</span><br><span class="line">     |       value match &#123;</span><br><span class="line">     |         <span class="keyword">case</span> _: <span class="built_in">String</span> =&gt; <span class="keyword">true</span></span><br><span class="line">     |         <span class="keyword">case</span> _ =&gt; <span class="keyword">false</span></span><br><span class="line">     |       &#125;</span><br><span class="line">     |     &#125;</span><br><span class="line">res6: <span class="built_in">List</span>[Any] = <span class="built_in">List</span>(abc, def)</span><br></pre></td></tr></table></figure>
+<p>因为在此只是关心类型为<code>String</code>的元素，但是偏函数却要处理其他的可能性，写出来的代码就感觉有些冗余，如果之前的失败的for推导中的写法能够生效，那么可读性就要高些：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">for</span> (<span class="function"><span class="title">Tuple1</span><span class="params">(x: String)</span></span> &lt;- xs.<span class="function"><span class="title">map</span><span class="params">(Tuple1.apply(_)</span></span>)) yield x</span><br><span class="line">res7: List[String] = <span class="function"><span class="title">List</span><span class="params">(abc, def)</span></span></span><br></pre></td></tr></table></figure>
+<p>这里对原始的数据类型进行了一次<code>uplift</code>操作，那么以前异构的<code>String</code>和<code>Int</code>现在都同构成为了同一种数据类型<code>Tuple1</code>。这样scala的类型系统就能自动推导基于<code>Tuple1</code>的<code>pattern matching</code>了。<br>其实这里的本质在于<code>uplift</code>，下面的代码也是能够工作的：  </p>
+<figure class="highlight stylus"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">scala&gt; <span class="keyword">for</span> (<span class="function"><span class="title">Some</span><span class="params">(x: String)</span></span> &lt;- xs.<span class="function"><span class="title">map</span><span class="params">(Some(_)</span></span>)) yield x</span><br><span class="line">res8: List[String] = <span class="function"><span class="title">List</span><span class="params">(abc, def)</span></span></span><br></pre></td></tr></table></figure>
+<p>可是<code>Some</code>更多的语义在于和<code>None</code>相对，如果想要表示数据值本身的话，在我看来<code>Tuple1</code>才是更好的选择！</p>
+  
+	</div>
+		<footer class="article-footer clearfix">
+<div class="article-catetags">
+
+
+  <div class="article-tags">
+  
+  <span></span> <a href="/tags/scala/">scala</a>
+  </div>
+
+</div>
+
+
+
+	<div class="article-share" id="share">
+	
+	  <div data-url="raoxunrong.github.io/2015/11/23/tuple1/" data-title="tuple1 | 勋荣‘s blog" data-tsina="null" class="share clearfix">
+	  </div>
+	
+	</div>
+
+
+</footer>
+
+   	       
+	</article>
+	
+<nav class="article-nav clearfix">
+ 
+
+<div class="next">
+<a href="/2015/10/17/generalized-type-constraints/"  title="泛型约束(Generalized Type Constraints)">
+ <strong>下一篇：</strong><br/> 
+ <span>泛型约束(Generalized Type Constraints)
+</span>
+</a>
+</div>
+
+</nav>
+
+	
+
+</div>  
+      <div class="openaside"><a class="navbutton" href="#" title="顯示側邊欄"></a></div>
+
+  <div id="toc" class="toc-aside">
+  <strong class="toc-title">文章目錄</strong>
+ 
+ 
+ 
+  </div>
+
+<div id="asidepart">
+<div class="closeaside"><a class="closebutton" href="#" title="隱藏側邊欄"></a></div>
+<aside class="clearfix">
+
+  
+
+  
+<div class="tagslist">
+	<p class="asidetitle">標簽</p>
+		<ul class="clearfix">
+		
+			
+				<li><a href="/tags/scala/" title="scala">scala<sup>4</sup></a></li>
+			
+		
+		</ul>
+</div>
+
+
+  <div class="linkslist">
+  <p class="asidetitle">友情鏈接</p>
+    <ul>
+        
+          <li>
+            
+            	<a href="https://coderq.com" target="_blank" title="一个面向程序员交流分享的新一代社区">码农圈</a>
+            
+          </li>
+        
+          <li>
+            
+            	<a href="http://www.thoughtworks.com/" target="_blank" title="ThoughtWorks">ThoughtWorks</a>
+            
+          </li>
+        
+    </ul>
+</div>
+
+  
+
+
+  <div class="rsspart">
+	<a href="/atom.xml" target="_blank" title="rss">RSS 訂閱</a>
+</div>
+
+</aside>
+</div>
+    </div>
+    <footer><div id="footer" >
+	
+	<div class="line">
+		<span></span>
+		<div class="author"></div>
+	</div>
+	
+	
+	<section class="info">
+		<p> 勋荣的唠叨，关于软件工程实践，抑或计算机科学 <br/>
+			日积月累，点滴进步！.</p>
+	</section>
+	 
+	<div class="social-font" class="clearfix">
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+	</div>
+			
+		
+
+		<p class="copyright">
+		Powered by <a href="http://hexo.io" target="_blank" title="hexo">hexo</a> and Theme by <a href="https://github.com/wuchong/jacman" target="_blank" title="Jacman">Jacman</a> © 2015 
+		
+		<a href="/about" target="_blank" title="Xunrong Rao">Xunrong Rao</a>
+		
+		
+		</p>
+</div>
+</footer>
+    <script src="/js/jquery-2.0.3.min.js"></script>
+<script src="/js/jquery.imagesloaded.min.js"></script>
+<script src="/js/gallery.js"></script>
+<script src="/js/jquery.qrcode-0.12.0.min.js"></script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.navbar').click(function(){
+    $('header nav').toggleClass('shownav');
+  });
+  var myWidth = 0;
+  function getSize(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+  };
+  var m = $('#main'),
+      a = $('#asidepart'),
+      c = $('.closeaside'),
+      o = $('.openaside');
+  c.click(function(){
+    a.addClass('fadeOut').css('display', 'none');
+    o.css('display', 'block').addClass('fadeIn');
+    m.addClass('moveMain');
+  });
+  o.click(function(){
+    o.css('display', 'none').removeClass('beforeFadeIn');
+    a.css('display', 'block').removeClass('fadeOut').addClass('fadeIn');      
+    m.removeClass('moveMain');
+  });
+  $(window).scroll(function(){
+    o.css("top",Math.max(80,260-$(this).scrollTop()));
+  });
+  
+  $(window).resize(function(){
+    getSize(); 
+    if (myWidth >= 1024) {
+      $('header nav').removeClass('shownav');
+    }else{
+      m.removeClass('moveMain');
+      a.css('display', 'block').removeClass('fadeOut');
+      o.css('display', 'none');
+      
+      $('#toc.toc-aside').css('display', 'none');
+        
+    }
+  });
+});
+</script>
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var ai = $('.article-content>iframe'),
+      ae = $('.article-content>embed'),
+      t  = $('#toc'),
+      ta = $('#toc.toc-aside'),
+      o  = $('.openaside'),
+      c  = $('.closeaside');
+  if(ai.length>0){
+    ai.wrap('<div class="video-container" />');
+  };
+  if(ae.length>0){
+   ae.wrap('<div class="video-container" />');
+  };
+  c.click(function(){
+    ta.css('display', 'block').addClass('fadeIn');
+  });
+  o.click(function(){
+    ta.css('display', 'none');
+  });
+  $(window).scroll(function(){
+    ta.css("top",Math.max(140,320-$(this).scrollTop()));
+  });
+});
+</script>
+
+
+<script type="text/javascript">
+$(document).ready(function(){ 
+  var $this = $('.share'),
+      url = $this.attr('data-url'),
+      encodedUrl = encodeURIComponent(url),
+      title = $this.attr('data-title'),
+      tsina = $this.attr('data-tsina'),
+      description = $this.attr('description');
+  var html = [
+  '<div class="hoverqrcode clearfix"></div>',
+  '<a class="overlay" id="qrcode"></a>',
+  '<a href="https://www.facebook.com/sharer.php?u=' + encodedUrl + '" class="article-share-facebook" target="_blank" title="Facebook"></a>',
+  '<a href="https://twitter.com/intent/tweet?url=' + encodedUrl + '" class="article-share-twitter" target="_blank" title="Twitter"></a>',
+  '<a href="#qrcode" class="article-share-qrcode" title="微信"></a>',
+  '<a href="http://widget.renren.com/dialog/share?resourceUrl=' + encodedUrl + '&srcUrl=' + encodedUrl + '&title=' + title +'" class="article-share-renren" target="_blank" title="人人"></a>',
+  '<a href="http://service.weibo.com/share/share.php?title='+title+'&url='+encodedUrl +'&ralateUid='+ tsina +'&searchPic=true&style=number' +'" class="article-share-weibo" target="_blank" title="微博"></a>',
+  '<span title="Share to"></span>'
+  ].join('');
+  $this.append(html);
+
+  $('.hoverqrcode').hide();
+
+  var myWidth = 0;
+  function updatehoverqrcode(){
+    if( typeof( window.innerWidth ) == 'number' ) {
+      myWidth = window.innerWidth;
+    } else if( document.documentElement && document.documentElement.clientWidth) {
+      myWidth = document.documentElement.clientWidth;
+    };
+    var qrsize = myWidth > 1024 ? 200:100;
+    var options = {render: 'image', size: qrsize, fill: '#2ca6cb', text: url, radius: 0.5, quiet: 1};
+    var p = $('.article-share-qrcode').position();
+    $('.hoverqrcode').empty().css('width', qrsize).css('height', qrsize)
+                          .css('left', p.left-qrsize/2+20).css('top', p.top-qrsize-10)
+                          .qrcode(options);
+  };
+  $(window).resize(function(){
+    $('.hoverqrcode').hide();
+  });
+  $('.article-share-qrcode').click(function(){
+    updatehoverqrcode();
+    $('.hoverqrcode').toggle();
+  });
+  $('.article-share-qrcode').hover(function(){}, function(){
+      $('.hoverqrcode').hide();
+  });
+});   
+</script>
+
+
+
+
+
+
+
+
+
+<link rel="stylesheet" href="/fancybox/jquery.fancybox.css" media="screen" type="text/css">
+<script src="/fancybox/jquery.fancybox.pack.js"></script>
+<script type="text/javascript">
+$(document).ready(function(){ 
+  $('.article-content').each(function(i){
+    $(this).find('img').each(function(){
+      if ($(this).parent().hasClass('fancybox')) return;
+      var alt = this.alt;
+      if (alt) $(this).after('<span class="caption">' + alt + '</span>');
+      $(this).wrap('<a href="' + this.src + '" title="' + alt + '" class="fancybox"></a>');
+    });
+    $(this).find('.fancybox').each(function(){
+      $(this).attr('rel', 'article' + i);
+    });
+  });
+  if($.fancybox){
+    $('.fancybox').fancybox();
+  }
+}); 
+</script>
+
+
+
+<!-- Analytics Begin -->
+
+<script type="text/javascript">
+(function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+})(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+ga('create', 'null', 'null');  
+ga('send', 'pageview');
+</script>
+
+
+
+<script type="text/javascript">
+var _bdhmProtocol = (("https:" == document.location.protocol) ? " https://" : " http://");
+document.write(unescape("%3Cscript src='" + _bdhmProtocol + "hm.baidu.com/h.js%3Fnull' type='text/javascript'%3E%3C/script%3E"));
+</script>
+
+
+
+<!-- Analytics End -->
+
+<!-- Totop Begin -->
+
+	<div id="totop">
+	<a title="返回頂部"><img src="/img/scrollup.png"/></a>
+	</div>
+	<script src="/js/totop.js"></script>
+
+<!-- Totop End -->
+
+<!-- MathJax Begin -->
+<!-- mathjax config similar to math.stackexchange -->
+
+
+<!-- MathJax End -->
+
+<!-- Tiny_search Begin -->
+
+<script>
+var option = {
+  engineKey: 'null'
+};
+(function(w,d,t,u,n,s,e){
+  s = d.createElement(t);
+  s.src = u;
+  s.async = 1;
+  w[n] = function(r){
+    w[n].opts = r;
+  };
+  e = d.getElementsByTagName(t)[0];
+  e.parentNode.insertBefore(s, e);
+})(window,document,'script','//tinysou-cdn.b0.upaiyun.com/ts.js','_ts');
+_ts(option);
+</script>
+
+<!-- Tiny_search End -->
+
+  </body>
+</html>
